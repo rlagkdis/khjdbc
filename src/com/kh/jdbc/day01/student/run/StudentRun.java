@@ -70,6 +70,7 @@ public class StudentRun {
 					student = sView.modifyStudent(student);
 					//student.setStudentId(studentId);
 					sCon.modifyStudent(student);
+					sView.displaySuccess("수정이 완료되었습니다.");
 				} else {
 					sView.displayError("일치하는 학생이 없습니다.");
 				}

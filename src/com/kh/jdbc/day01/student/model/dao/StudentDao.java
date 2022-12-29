@@ -85,7 +85,7 @@ public class StudentDao {
 			Statement stmt = conn.createStatement();
 			ResultSet rset = stmt.executeQuery(sql);
 			sList = new ArrayList<Student>();
-			while(rset.next()) {
+			while(rset.next()) {     //*****이름 여러개면 그 여러개 정보 List에 담아서 다 출력해야하니까 while로 해야함!!
 				student = new Student();
 				student.setStudentId(rset.getString("STUDENT_ID"));
 				student.setStudentName(rset.getString("STUDENT_NAME"));

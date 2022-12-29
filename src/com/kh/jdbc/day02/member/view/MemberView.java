@@ -38,6 +38,39 @@ public class MemberView {
 		}
 	}
 	
+	public void showOne(Member member) {
+		System.out.print("ID : " + member.getMemberId());
+		System.out.print(", 비밀번호 : " + member.getMemberPwd());
+		System.out.print(", 이름 : " + member.getMemberName());
+		System.out.print(", 성별 : " + member.getMemberGender());
+		System.out.print(", 나이 : " + member.getMemberAge());
+		System.out.print(", 이메일 : " + member.getMemberEmail());
+		System.out.print(", 번호 : " + member.getMemberPhone());
+		System.out.print(", 주소 : " + member.getMemberAddress());
+		System.out.print(", 취미 : " + member.getMemberHobby());
+		System.out.println(", 가입날짜 : " + member.getMemberDate());
+	}
+	
+	public Member modifyMember(Member member) {
+		Scanner sc = new Scanner(System.in);
+		System.out.println("수정할 비밀번호 입력 : ");
+		String memberPwd = sc.next();
+		System.out.println("수정할 이메일 입력 : ");
+		String memberEmail = sc.next();
+		System.out.println("수정할 번호 입력 : ");
+		String memberPhone = sc.next();
+		System.out.println("수정할 주소 입력 : ");
+		String memberAddress = sc.next();
+		System.out.println("수정할 취미 입력 : ");
+		String memberHobby = sc.next();
+		member.setMemberPwd(memberPwd);
+		member.setMemberEmail(memberEmail);
+		member.setMemberPhone(memberPhone);
+		member.setMemberAddress(memberAddress);
+		member.setMemberHobby(memberHobby);
+		return member;
+	}
+	
 	public Member inputMember() {
 		Scanner sc = new Scanner(System.in);
 		System.out.print("아이디 입력 : ");
@@ -62,6 +95,20 @@ public class MemberView {
 		Member member = new Member(memberId,memberPwd,memberName,memberGender,memberAge,
 				memberEmail,memberPhone,memberAddress,memberHobby,null);
 		return member;
+	}
+	
+	public String inputMemberName() {
+		Scanner sc = new Scanner(System.in);
+		System.out.println("이름 입력 : ");       // 가이드메시지 잊지말기
+		String memberName = sc.next();
+		return memberName;
+	}
+	
+	public String inputMemberId(String message) {
+		Scanner sc = new Scanner(System.in);
+		System.out.println(message + "할 아이디 입력 : ");
+		String memberId = sc.next();
+		return memberId;
 	}
 	
 	public void displaySuccess(String message) {
