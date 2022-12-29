@@ -142,6 +142,4 @@ public class Student {
 				+ address + ", hobby=" + hobby + ", enrollDate=" + enrollDate + "]";
 	}
 
-	
-
 }
