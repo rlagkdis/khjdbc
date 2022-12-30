@@ -2,6 +2,7 @@ package com.kh.jdbc.day02.member.model.dao;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -57,17 +58,63 @@ public class MemberDAO {
 		return mList;
 	}
 	
-	public int insertMember(Member member) {
-		String sql = "INSERT INTO MEMBER_TBL VALUES('"+member.getMemberId()+"', '"+member.getMemberPwd()+"', '"+member.getMemberName()+"', '"+member.getMemberGender()+"', "+member.getMemberAge()+", '"+member.getMemberEmail()+"', '"+member.getMemberPhone()+"', '"+member.getMemberAddress()+"', '"+member.getMemberHobby()+"', '"+member.getMemberDate()+"')";
+	public int checkLogin(Member member) {
+		String query = "SELECT COUNT(*) AS M_COUNT FROM MEMBER_TBL WHERE MEMBER_ID = ? AND MEMBER_PWD = ?";
+		// 이 아이디와 비밀번호를 가진 행을 카운트해서 필드값을 가져와서 리턴하겠다
+		// COUNT(*) 하면 아이디와 비밀번호가진게 있다면 1이 뜸
 		int result = 0;
 		try {
 			Class.forName(DRIVER_NAME);
 			Connection conn = DriverManager.getConnection(URL, USER, PASSWORD);
-			Statement stmt = conn.createStatement();
-			result = stmt.executeUpdate(sql);
-			//여기서 int resutl = stmt.executeUpdate(sql);
-			//하면 return 할때 오류뜸
-			stmt.close();
+			PreparedStatement pstmt = conn.prepareStatement(query);
+			pstmt.setString(1, member.getMemberId());
+			pstmt.setString(2, member.getMemberPwd());
+			ResultSet rset = pstmt.executeQuery();
+			if(rset.next()) {
+				result = rset.getInt("M_COUNT");
+			}
+		} catch (ClassNotFoundException e) {
+			e.printStackTrace();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return result;
+	}
+	
+	public int insertMember(Member member) {
+		//String sql = "INSERT INTO MEMBER_TBL VALUES('"+member.getMemberId()+"', '"+member.getMemberPwd()+"', '"+member.getMemberName()+"', '"+member.getMemberGender()+"', "+member.getMemberAge()+", '"+member.getMemberEmail()+"', '"+member.getMemberPhone()+"', '"+member.getMemberAddress()+"', '"+member.getMemberHobby()+"', DEFAULT)";
+		String sql = "INSERT INTO MEMBER_TBL VALUES(?,?,?,?,?,?,?,?,?,DEFAULT)";
+		int result = 0;
+		try {
+			Class.forName(DRIVER_NAME);
+			Connection conn = DriverManager.getConnection(URL, USER, PASSWORD);
+			
+			// 쿼리문 실행 준비 
+			PreparedStatement ptsmt = conn.prepareStatement(sql);
+			ptsmt.setString(1, member.getMemberId());
+			ptsmt.setString(2, member.getMemberPwd());
+			ptsmt.setString(9, member.getMemberHobby());
+			ptsmt.setString(4, member.getMemberGender());
+			ptsmt.setString(3, member.getMemberName());
+			ptsmt.setString(6, member.getMemberEmail());
+			ptsmt.setInt(5, member.getMemberAge());
+			ptsmt.setString(7, member.getMemberPhone());
+			ptsmt.setString(8, member.getMemberAddress());
+			
+			// 쿼리문 실행
+			result = ptsmt.executeUpdate();    // 이거 쿼리문 실행 잘 적어야됨**
+			// 위에 준비에서 PreparedStatement ptsmt = conn.prepareStatement(sql);
+			// sql 넣었으니까 result = ptsmt.executeUpdate(); 여기는 넣는거 아님 **
+			
+			// 여기서는 1,2,3,..4, x. 이렇게 순서대로 안해도됨
+			// 그냥 1번에 Id, 9번에 Hobby 이것만 잘 지켜서 넣으면됨 **
+			
+//			Statement stmt = conn.createStatement();
+//			result = stmt.executeUpdate(sql);
+//			여기서 int resutl = stmt.executeUpdate(sql);
+//			하면 return 할때 오류뜸
+//			stmt.close();
+			ptsmt.close();
 			conn.close();
 		} catch (ClassNotFoundException e) {
 			e.printStackTrace();
@@ -144,33 +191,35 @@ public class MemberDAO {
 		return mList;
 	}
 	
-	public void updateMember() {
-		String sql = "";
+	public int updateMember(Member member) {
+		String sql = "UPDATE MEMBER_TBL SET " + "MEMBER_PWD = '"+member.getMemberPwd()+"'," + "MEMBER_EMAIL = '"+member.getMemberEmail()+"'," + "MEMBER_PHONE = '"+member.getMemberPhone()+"'," +"MEMBER_ADDRESS = '"+member.getMemberAddress()+"'," + "MEMBER_HOBBY = '"+member.getMemberHobby()+"'" + "WHERE MEMBER_ID = '"+member.getMemberId()+"'";
+		int result = 0;
 		try {
 			Class.forName(DRIVER_NAME);
 			Connection conn = DriverManager.getConnection(URL, USER, PASSWORD);
 			Statement stmt = conn.createStatement();
-			int result = stmt.executeUpdate(sql);
+			result = stmt.executeUpdate(sql);
 			
 		} catch (ClassNotFoundException e) {
 			e.printStackTrace();
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
-		
+		return result;
 	}
 	
 	public int deleteMember(String memberId) {
-		String sql = "DELETE FROM MEMBER_TBL WHERE MEMBER_ID = '"+memberId+"'";
+		String sql = "DELETE FROM MEMBER_TBL WHERE MEMBER_ID = ?";
 		int result = 0;    
 		try {
 			Class.forName(DRIVER_NAME);
 			Connection conn = DriverManager.getConnection(URL, USER, PASSWORD);
-			Statement stmt = conn.createStatement();
-			result = stmt.executeUpdate(sql);
-			// 여기에 int result = 하면 return 할때 오류남!!
+			PreparedStatement pstmt = conn.prepareStatement(sql);
+			pstmt.setString(1, memberId);   // 쿼리문 실행 준비
+			result = pstmt.executeUpdate();			// 쿼리문 실행
+			
+			pstmt.close();
 			conn.close();
-			stmt.close();
 		} catch (ClassNotFoundException e) {
 			e.printStackTrace();
 		} catch (SQLException e) {

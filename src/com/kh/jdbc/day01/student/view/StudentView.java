@@ -54,6 +54,18 @@ public class StudentView {
 		return studentName;
 	}
 	
+	public Student inputLoginInfo() {
+		Scanner sc = new Scanner(System.in);
+		Student student = new Student();
+		System.out.println("아이디 : ");
+		String studentId = sc.next();
+		System.out.println("비밀번호 : ");
+		String studentPwd = sc.next();
+		student.setStudentId(studentId);
+		student.setStudentPwd(studentPwd);
+		return student;
+	}
+	
 
 	public Student inputStudent() {
 		Scanner sc = new Scanner(System.in);

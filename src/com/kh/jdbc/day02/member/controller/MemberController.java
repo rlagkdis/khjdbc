@@ -15,7 +15,11 @@ public class MemberController {
 		List<Member> mList = mDao.selectAll();
 		return mList;
 	}
-	
+	/**
+	 * 회원가입
+	 * @param member
+	 * @return int
+	 */
 	public int registerMember(Member member) {
 		MemberDAO mDao = new MemberDAO();
 		int result = mDao.insertMember(member);
@@ -36,12 +40,23 @@ public class MemberController {
 	
 	public int removeMember(String memberId) {
 		MemberDAO mDao = new MemberDAO();
-			int result = mDao.deleteMember(memberId);
+		int result = mDao.deleteMember(memberId);
 		return result;
 	}
 	
 	public int modifyMember(Member member) {
-		int result = 0;
+		MemberDAO mDao = new MemberDAO();
+		int result = mDao.updateMember(member);
+		return result;
+	}
+	/**
+	 * 
+	 * @param member
+	 * @return
+	 */
+	public int checkInfo(Member member) {
+		MemberDAO mDao = new MemberDAO();
+		int result = mDao.checkLogin(member);
 		return result;
 	}
 

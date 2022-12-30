@@ -18,8 +18,6 @@ public class Member {
 	// 생성자
 	public Member() {}
 	
-	
-	
 	public Member(String memberId, String memberPwd, String memberName, String memberGender, int memberAge,
 			String memberEmail, String memberPhone, String memberAddress, String memberHobby, Timestamp memberDate) {
 		super();
@@ -34,8 +32,6 @@ public class Member {
 		this.memberHobby = memberHobby;
 		this.memberDate = memberDate;
 	}
-
-
 
 	//getter, setter
 	public String getMemberId() {

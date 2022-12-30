@@ -23,6 +23,7 @@ public class MemberView {
 	}
 	
 	public void showAll(List<Member> mList) {
+		System.out.println("=== === 전체 회원 조회 결과 === ===");
 		for (Member mOne : mList) {
 			System.out.print("ID : " + mOne.getMemberId());
 			System.out.print(", 비밀번호 : " + mOne.getMemberPwd());
@@ -34,7 +35,7 @@ public class MemberView {
 			System.out.print(", 주소 : " + mOne.getMemberAddress());
 			System.out.print(", 취미 : " + mOne.getMemberHobby());
 			System.out.println(", 가입날짜 : " + mOne.getMemberDate());
-			// 마지막애는 ln 안하면 === 회원관리 프로그램 === 이게 옆에 붙어서 나온다
+			// 마지막은 ln 안하면 === 회원관리 프로그램 === 이게 옆에 붙어서 나온다
 		}
 	}
 	
@@ -60,7 +61,8 @@ public class MemberView {
 		System.out.println("수정할 번호 입력 : ");
 		String memberPhone = sc.next();
 		System.out.println("수정할 주소 입력 : ");
-		String memberAddress = sc.next();
+		sc.nextLine();
+		String memberAddress = sc.nextLine();
 		System.out.println("수정할 취미 입력 : ");
 		String memberHobby = sc.next();
 		member.setMemberPwd(memberPwd);
@@ -102,6 +104,19 @@ public class MemberView {
 		System.out.println("이름 입력 : ");       // 가이드메시지 잊지말기
 		String memberName = sc.next();
 		return memberName;
+	}
+	
+	public Member inputLoginInfo() {
+		Scanner sc = new Scanner(System.in);
+		System.out.println("=== === 로그인 정보 입력 === ===");
+		System.out.print("아이디 : ");
+		String memberId = sc.next();
+		System.out.println("비밀번호 : ");
+		String memberPwd = sc.next();
+		Member member = new Member();
+		member.setMemberId(memberId);
+		member.setMemberPwd(memberPwd);
+		return member;
 	}
 	
 	public String inputMemberId(String message) {

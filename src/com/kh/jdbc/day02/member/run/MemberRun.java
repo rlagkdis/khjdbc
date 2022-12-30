@@ -66,6 +66,13 @@ public class MemberRun {
 				// 회원 정보 수정
 				memberId = mView.inputMemberId("수정");
 				member = mCon.printOneById(memberId);
+				if(member != null) {
+					member = mView.modifyMember(member);
+					mCon.modifyMember(member);
+					mView.displaySuccess("수정 완료");
+				} else {
+					mView.displayError("수정 실패");
+				}
 				break;
 				
 			case 6 : 
@@ -76,6 +83,18 @@ public class MemberRun {
 					mView.displaySuccess("탈퇴 성공");
 				} else {
 					mView.displayError("탈퇴 실패");
+				}
+				break;
+			case 7 : 
+				// 로그인
+				member = mView.inputLoginInfo();
+				result = mCon.checkInfo(member);
+				if(result > 0) {
+					// 로그인 성공
+					mView.displaySuccess("로그인 성공");
+				} else {
+					//로그인 실패
+					mView.displayError("일치하는 정보가 존재하지 않습니다.");
 				}
 				break;
 			default : break;
