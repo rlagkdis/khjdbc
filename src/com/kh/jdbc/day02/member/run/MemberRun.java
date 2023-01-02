@@ -68,7 +68,7 @@ public class MemberRun {
 				member = mCon.printOneById(memberId);
 				if(member != null) {
 					member = mView.modifyMember(member);
-					mCon.modifyMember(member);
+					result = mCon.modifyMember(member);
 					mView.displaySuccess("수정 완료");
 				} else {
 					mView.displayError("수정 실패");

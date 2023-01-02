@@ -124,18 +124,52 @@ public class MemberDAO {
 		return result;
 	}
 	
+//	public Member selectOneById(String memberId) {
+//		Member member = null;
+//		String sql = "SELECT * FROM MEMBER_TBL WHERE MEMBER_ID = '"+memberId+"'";
+//		try {
+//			Class.forName(DRIVER_NAME);
+//			Connection conn = DriverManager.getConnection(URL, USER, PASSWORD);
+//			Statement stmt = conn.createStatement();
+//			ResultSet rset = stmt.executeQuery(sql);
+//			if(rset.next()) {
+//				member = new Member();
+//				member.setMemberId(rset.getString("MEMBER_ID"));
+//				member.setMemberPwd(rset.getString("MEMBER_PWD"));
+//				member.setMemberName(rset.getString("MEMBER_NAME"));
+//				member.setMemberGender(rset.getString("MEMBER_GENDER"));
+//				member.setMemberAge(rset.getInt("MEMBER_AGE"));
+//				member.setMemberEmail(rset.getString("MEMBER_EMAIL"));
+//				member.setMemberPhone(rset.getString("MEMBER_PHONE"));
+//				member.setMemberAddress(rset.getString("MEMBER_ADDRESS"));
+//				member.setMemberHobby(rset.getString("MEMBER_HOBBY"));
+//				member.setMemberDate(rset.getTimestamp("MEMBER_DATE"));
+//			}
+//			rset.close();
+//			stmt.close();
+//			conn.close();
+//		} catch (ClassNotFoundException e) {
+//			e.printStackTrace();
+//		} catch (SQLException e) {
+//			e.printStackTrace();
+//		}
+//		return member;
+//	}
+	
 	public Member selectOneById(String memberId) {
+		// selectOneById - PreparedStatement로 해본거
+		String sql = "SELECT * FROM MEMBER_TBL WHERE MEMBER_ID = ?";
 		Member member = null;
-		String sql = "SELECT * FROM MEMBER_TBL WHERE MEMBER_ID = '"+memberId+"'";
 		try {
 			Class.forName(DRIVER_NAME);
 			Connection conn = DriverManager.getConnection(URL, USER, PASSWORD);
-			Statement stmt = conn.createStatement();
-			ResultSet rset = stmt.executeQuery(sql);
+			PreparedStatement pstmt = conn.prepareStatement(sql);
+			pstmt.setString(1, memberId);
+			ResultSet rset = pstmt.executeQuery();
 			if(rset.next()) {
 				member = new Member();
-				member.setMemberId(rset.getString("MEMBER_ID"));
-				member.setMemberPwd(rset.getString("MEMBER_PWD"));
+				member.setMemberId(rset.getString(1));
+				member.setMemberPwd(rset.getString(2));
 				member.setMemberName(rset.getString("MEMBER_NAME"));
 				member.setMemberGender(rset.getString("MEMBER_GENDER"));
 				member.setMemberAge(rset.getInt("MEMBER_AGE"));
@@ -145,9 +179,8 @@ public class MemberDAO {
 				member.setMemberHobby(rset.getString("MEMBER_HOBBY"));
 				member.setMemberDate(rset.getTimestamp("MEMBER_DATE"));
 			}
-			rset.close();
-			stmt.close();
 			conn.close();
+			pstmt.close();
 		} catch (ClassNotFoundException e) {
 			e.printStackTrace();
 		} catch (SQLException e) {
@@ -156,15 +189,21 @@ public class MemberDAO {
 		return member;
 	}
 	
+	
+	
 	public List<Member> selectAllByName(String memberName) {
 		Member member = null;
 		List<Member> mList = null;
-		String sql = "SELECT * FROM MEMBER_TBL WHERE MEMBER_NAME = '"+memberName+"'";
+//		String sql = "SELECT * FROM MEMBER_TBL WHERE MEMBER_NAME = '"+memberName+"'";
+		String sql = "SELECT * FROM MEMBER_TBL WHERE MEMBER_NAME LIKE ?";  
 		try {
 			Class.forName(DRIVER_NAME);
 			Connection conn = DriverManager.getConnection(URL, USER, PASSWORD);
-			Statement stmt = conn.createStatement();
-			ResultSet rset = stmt.executeQuery(sql);
+//			Statement stmt = conn.createStatement();
+//			ResultSet rset = stmt.executeQuery(sql);
+			PreparedStatement pstmt = conn.prepareStatement(sql);
+			pstmt.setString(1, "%"+memberName+"%");
+			ResultSet rset = pstmt.executeQuery();
 			mList = new ArrayList<Member>();
 			while(rset.next()) {
 				member = new Member();
@@ -180,8 +219,8 @@ public class MemberDAO {
 				member.setMemberDate(rset.getTimestamp("MEMBER_DATE"));
 				mList.add(member);
 			}
-			stmt.close();
-			rset.close();
+//			stmt.close();
+//			rset.close();
 			conn.close();
 		} catch (ClassNotFoundException e) {
 			e.printStackTrace();
@@ -190,6 +229,7 @@ public class MemberDAO {
 		}
 		return mList;
 	}
+	
 	
 	public int updateMember(Member member) {
 		String sql = "UPDATE MEMBER_TBL SET " + "MEMBER_PWD = '"+member.getMemberPwd()+"'," + "MEMBER_EMAIL = '"+member.getMemberEmail()+"'," + "MEMBER_PHONE = '"+member.getMemberPhone()+"'," +"MEMBER_ADDRESS = '"+member.getMemberAddress()+"'," + "MEMBER_HOBBY = '"+member.getMemberHobby()+"'" + "WHERE MEMBER_ID = '"+member.getMemberId()+"'";
