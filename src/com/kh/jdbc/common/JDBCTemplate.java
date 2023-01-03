@@ -6,41 +6,32 @@ import java.sql.SQLException;
 
 public class JDBCTemplate {
 	
-	private final String DRIVER_NAME = "oracle.jdbc.driver.OracleDriver";
-	private final String URL = "jdbc:oracle:thin:@localhost:1521:xe";
-	private final String USER = "STUDENT";
-	private final String PASSWORD = "STUDENT";
+	private static final String DRIVER_NAME = "oracle.jdbc.driver.OracleDriver";
+	private static final String URL = "jdbc:oracle:thin:@localhost:1521:xe";
+	private static final String USER = "STUDENT";
+	private static final String PASSWORD = "STUDENT";  //static이라 글자 기울어짐!
 	
-	private static JDBCTemplate instance;
+	private static Connection conn;
 	
-	private JDBCTemplate() {
-		try {
-			Class.forName(DRIVER_NAME);   // 반드시 해줘야하는 것
-		} catch (ClassNotFoundException e) {
-			e.printStackTrace();
+	private JDBCTemplate() {}
+	
+	public static Connection getConnection() { // static메소드안에있는건 static변수여야됨
+			try {
+				if(conn == null || conn.isClosed()) {
+					Class.forName(DRIVER_NAME);
+				conn = DriverManager.getConnection(URL, USER, PASSWORD);
+				conn.setAutoCommit(false);   // 오토 커밋 해제!!
+			} 
+			}catch (SQLException e) {
+				e.printStackTrace();
+			} catch (ClassNotFoundException e) {
+				e.printStackTrace();
+			}
+			return conn;
 		}
-	}
 	
-	public static JDBCTemplate getDriverLoad() {
-		if(instance == null) {
-			instance = new JDBCTemplate();
-		}
-		return instance;
-	}
-	
-	// MemberDAO 에서 Connection 하던거 따로 빼서 여기서 해주기
-	public Connection getConnection() {
-		Connection conn = null;   
-		try {
-			conn = DriverManager.getConnection(URL, USER, PASSWORD);
-			conn.setAutoCommit(false);   // 오토 커밋 해제!!
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-		return conn;
-	}
-	
-	public void commit(Connection conn) {
+	// 커밋
+	public static void commit(Connection conn) {
 		try {
 			if(conn != null && !conn.isClosed())
 			conn.commit();
@@ -48,8 +39,8 @@ public class JDBCTemplate {
 			e.printStackTrace();
 		}
 	}
-	
-	public void rollback(Connection conn) {
+	// 롤백
+	public static void rollback(Connection conn) {
 		try {
 			if(conn != null && !conn.isClosed())
 			conn.rollback();
@@ -57,8 +48,8 @@ public class JDBCTemplate {
 			e.printStackTrace();
 		}
 	}
-	
-	public void close(Connection conn) {
+	// 연결 해제
+	public static void close(Connection conn) {
 		try {
 			if(conn != null && !conn.isClosed())
 				conn.close();
