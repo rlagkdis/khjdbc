@@ -9,7 +9,7 @@ import com.kh.jdbc.day03.member.model.vo.Member;
 
 public class MemberService {
 	
-	private JDBCTemplate jdbcTemplate;
+//	private JDBCTemplate jdbcTemplate;
 	private MemberDAO mDao;
 	
 	public MemberService() {
@@ -23,7 +23,7 @@ public class MemberService {
 //		JDBCTemplate jdbcTemplate = JDBCTemplate.getDriverLoad();
 		Connection conn = JDBCTemplate.getConnection();
 		mList = mDao.selectAll(conn);
-//		jdbcTemplate.close(conn);
+//		JDBCTemplate.close(conn);
 		return mList;
 	}
 	/**
@@ -34,7 +34,7 @@ public class MemberService {
 	public Member selectOneById(String memberId) {
 			Connection conn = JDBCTemplate.getConnection();
 			Member member = mDao.selectOneById(conn, memberId);
-	//		JDBCTemplate.close(conn);
+//			JDBCTemplate.close(conn);
 			return member;  
 		}
 	
